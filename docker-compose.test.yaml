@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  app-test:
+    container_name: neo-api-test
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    image: node:6     ## node.js v6
+    volumes:          ## adds app folder to the container
+      - ./:/app
+    ports:            ## publish ports
+      - "8080:8080"
+    working_dir: /app         ## uses work dir /app
+    entrypoint: npm test   ## tests application
+    depends_on:
+      - mongo
+    environment:
+      - DB_HOST=mongo
+      - DB_USER=
+      - DB_PASSWORD=
+      - DB_NAME=basic_backend_interview_test
+      - NASA_API_KEY=N7LkblDsc5aen05FJqBQ8wU4qSdmsftwJagVK7UD
+  mongo:
+    image: mongo:latest
+    ports:
+      - 27017:27017

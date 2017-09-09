@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+  app:
+    container_name: neo-api
+    image: node:6     ## node.js v6
+    volumes:          ## adds app folder to the container
+      - ./:/app
+    ports:            ## publish ports
+      - "80:10010"
+    working_dir: /app         ## uses work dir /app
+    entrypoint: npm start   ## starts application
+    depends_on:
+      - mongo
+    environment:
+      - DB_HOST=mongo
+      - DB_USER=
+      - DB_PASSWORD=
+      - DB_NAME=basic_backend_interview
+      - NASA_API_KEY=N7LkblDsc5aen05FJqBQ8wU4qSdmsftwJagVK7UD
+  mongo:
+    image: mongo:latest
+    ports:
+      - 27017:27017
