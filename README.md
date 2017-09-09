@@ -1,5 +1,38 @@
 # Basic Backend Developer Interview
 
+##Requirements
+
+node >= 6.0.0
+npm >= 3.0.0
+docker >= 
+docker-compose >=
+#Quick start
+
+# clone the repo without git history
+git clone --depth 1 https://github.com/stockler/basic-backend-interview-test.git
+
+# change current directory to caixaeletronico
+cd basic-backend-interview-test
+
+# run the server
+docker-compose up
+
+
+##Testing
+
+# run unit tests (single run)
+if docker-compose is already runs, runs docker-compose down before testing.
+
+docker-compose -f docker-compose.test.yaml run app 
+docker-compose -f docker-compose.test.yaml down
+
+
+
+
+
+
+
+
 Dear candidate, please follow this readme and solve all questions.
 
 > Before you can start, you should prepare your development environment.
