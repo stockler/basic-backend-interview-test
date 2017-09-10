@@ -19,8 +19,12 @@
     "eslint-plugin-promise": "3.5.0",
     "express": "^4.15.3",
     "mocha": "3.4.2",
+    "moment": "^2.18.1",
     "mongoose": "^4.11.5",
+    "nock": "^9.0.14",
     "nodemon": "1.11.0",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1",
     "should": "^7.1.0",
     "supertest": "^3.0.0",
     "swagger-express-mw": "^0.7.0",
@@ -46,7 +50,7 @@
   "scripts": {
     "start": "npm run build && node ./dist/app.js",
     "test": "rm -rf ./dist && npm run build && mocha ./dist/**/*.spec.js",
-    "build": "./node_modules/.bin/tsc && cp -r ./config ./dist && mkdir -p ./dist/api/swagger && cp ./src/api/swagger/swagger.yaml ./dist/api/swagger/swagger.yaml",
+    "build": "./node_modules/.bin/tsc && cp -r ./config ./dist && mkdir -p ./dist/api/mocks && cp ./src/api/mocks/*.json ./dist/test/api/services && mkdir -p ./dist/api/swagger && cp ./src/api/swagger/swagger.yaml ./dist/api/swagger/swagger.yaml",
     "dev": "tsc --watch & nodemon dist",
     "lint": "eslint src --ext ts",
     "tsc": "tsc"
