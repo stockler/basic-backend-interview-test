@@ -1,9 +1,10 @@
 swagger: "2.0"
 info:
   version: "0.0.1"
-  title: Users Quizz API
+  title: Basic Backend Interview Test
+  description: Test
 # during dev, should point to your local machine
-host: localhost:10010
+host: localhost
 # basePath prefixes all resource paths 
 basePath: /
 # 
@@ -35,6 +36,109 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /neo/hazardous:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: 'neo.controller'
+    get:
+      description: Returns all NEOs hazardous to the caller
+      # used as the method name of the controller
+      operationId: getNeosHazardous
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/NeosResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /neo/fastest:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: 'neo.controller'
+    get:
+      description: Returns all NEOs hazardous to the caller
+      # used as the method name of the controller
+      operationId: getFastestNeo
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Neo"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      parameters:
+        - name: hazardous
+          in: query
+          description: The hazardous of the NEO to find
+          required: false
+          type: string
+  /neo/best-year:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: 'neo.controller'
+    get:
+      description: Returns all NEOs hazardous to the caller
+      # used as the method name of the controller
+      operationId: getBestYearNeo
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/BestYearResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      parameters:
+        - name: hazardous
+          in: query
+          description: The hazardous of the NEO to find
+          required: false
+          type: string
+  /neo/best-month:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: 'neo.controller'
+    get:
+      description: Returns all NEOs hazardous to the caller
+      # used as the method name of the controller
+      operationId: getBestMonthNeo
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/BestMonthResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      parameters:
+        - name: hazardous
+          in: query
+          description: The hazardous of the NEO to find
+          required: false
+          type: string
+  /getLast3DaysNeosFromNasa:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: 'neo.controller'
+    get:
+      description: Returns lasts 3 days NEOs got from Nasa to the caller
+      # used as the method name of the controller
+      operationId: getLast3DaysNeosFromNasa
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Neos"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /swagger:
     x-swagger-pipe: swagger_raw
 # complex objects have schema definitions
@@ -51,25 +155,86 @@ definitions:
     properties:
       message:
         type: string
-  SuccessResponse:
+  BestMonthResponse:
     required:
-      - message
+      - month
+      - count
     properties:
-      message:
+      month:
         type: string
+      count:
+        type: integer
+  BestYearResponse:
+    required:
+      - year
+      - count
+    properties:
+      year:
+        type: string
+      count:
+        type: integer
+  NeosResponse:  
+    type: object
+    properties:  
+      neos:
+        type: integer
+        description: the number of neos in response
+      total:
+        type: integer
+        description: the number of neos in all DB dataset
+      _links:
+        type: array
+        items:
+          $ref: '#/definitions/HALLink'         
+      _embedded:
+        type: array
+        items:
+          $ref: '#/definitions/Neo'
+  Neos:  
+    type: array
+    items:
+      $ref: '#/definitions/Neo'
+  Neo:
+    type: object
+    properties:
+      _links:
+        type: array
+        items:
+          $ref: '#/definitions/HALLink'
+      _id:
+        type: integer
+        description: The neo ID.
+      reference:
+        type: string
+        description: reference of the NEO from NASA
+      name:
+        type: string
+        description: name of the NEO
+      speed:
+        type: integer
+        description: speed of the NEO in kilometers
+      date:
+        type: string
+        format: date
+        description: date of occurrency of the NEO from NASA
+      hazardous:
+        type: boolean
+        description: If NEO is hazardous
+      createdAt:
+        type: string
+        format: date
+        description: date of NEO created in DB
+      updatedAt:
+        type: string
+        format: date
+        description: date of NEO updated in DB
   HALLink:
     type: object
-    description: the HAL link is specified in the specification chapter 5
+    description: the HAL link by HATEOAS approach
     properties:
       href:
         type: string
         description: the full reference to a related resource
-      name:
+      rel:
         type: string  
         description: a reference to a related resource as secondary identifier
-      title:
-        type: string
-        description: a human readable reference to a related resource
-      type:
-        type: string
-        description: the specific content-type including version and concept

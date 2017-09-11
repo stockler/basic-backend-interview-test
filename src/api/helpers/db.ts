@@ -3,7 +3,7 @@ import { Mockgoose } from 'mockgoose';
 import * as Promise from 'bluebird';
 
 (<any>mongoose).Promise = Promise;
-mongoose.set('debug', true);
+mongoose.set('debug', false);
 
 const options = { server: { socketOptions: { keepAlive: 1 } } };
 
