@@ -1,3 +1,39 @@
+## Requirements
+
+node >= 6.0.0
+npm >= 3.0.0
+docker >= 17.06.1-ce
+docker-compose >= 1.14.0
+swagger-node >= 0.7.5
+typescript >= 2.4.1
+spectacle-docs >= 0.9.8 
+
+# Quick start
+
+# clone the repo without git history
+git clone --depth 1 https://github.com/stockler/basic-backend-interview-test.git
+
+# change current directory to caixaeletronico
+cd basic-backend-interview-test
+
+# run the server
+docker-compose up
+
+# Populate a DB with NEOs from NASA after started server
+curl http://localhost/getLast3DaysNeosFromNasa
+
+## Testing
+
+# run unit tests (single run)
+docker-compose -f docker-compose.test.yaml run app-test 
+
+## Generating docs
+
+# run the spectacle to generate docs
+spectacle src/api/swagger/swagger.yaml
+> access html in public folder
+
+
 # Basic Backend Developer Interview
 
 Dear candidate, please follow this readme and solve all questions.
