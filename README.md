@@ -13,7 +13,7 @@
 #### clone the repo without git history
 git clone --depth 1 https://github.com/stockler/basic-backend-interview-test.git
 
-#### change current directory to caixaeletronico
+#### change current directory to basic-backend-interview-test
 cd basic-backend-interview-test
 
 #### run the server
