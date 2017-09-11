@@ -2,27 +2,27 @@ import { expect, should } from 'chai';
 import * as request from 'supertest';
 import { app, event } from '../../../app';
 
-before(function (done) {  
-  event.on("started", function(){
+before((done) => {  
+  event.on("started", () => {
       done();
   });
 });
 
 
-describe('controllers', function() {
+describe('controllers', () => {
 
-  describe('hello world', function() {
+  describe('hello world', () => {
 
-    describe('GET /', function() {
+    describe('GET /', () => {
 
-      it('should return a default string', function(done) {
+      it('should return a default string', (done) => {
 
         request(app)
           .get('/')
           .set('Accept', 'application/json')
           .expect('Content-Type', /json/)
           .expect(200)
-          .end(function(err, res) {
+          .end((err, res) => {
             should().not.exist(err);
 
             expect(res.body).to.be.a('object');
@@ -32,26 +32,6 @@ describe('controllers', function() {
             done();
           });
       });
-
-      // it('should accept a name parameter', function(done) {
-
-      //   request(server)
-      //     .get('/hello')
-      //     .query({ name: 'Scott'})
-      //     .set('Accept', 'application/json')
-      //     .expect('Content-Type', /json/)
-      //     .expect(200)
-      //     .end(function(err, res) {
-      //       should.not.exist(err);
-
-      //       res.body.should.eql('Hello, Scott!');
-
-      //       done();
-      //     });
-      // });
-
     });
-
   });
-
 });

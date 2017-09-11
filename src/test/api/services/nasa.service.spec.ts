@@ -19,8 +19,6 @@ describe('services', () => {
   before((done) => {  
     nasaService = NasaService.getInstance();
 
-    console.log(__dirname);
-
     //mockNeosJSON = fs.readFileSync('../../../api/mocks/response-feed.json', 'utf8');
     mockNeosJSON = fs.readFileSync(__dirname +'/feed.json');
 

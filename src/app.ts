@@ -27,9 +27,8 @@ connection
       const port = process.env.PORT || 10010;
       app.listen(port, () => {  
         event.emit("started");
+        console.log("Server started");
       });
-
-      console.log('try this:\ncurl http://127.0.0.1:' + port + '/users');
       
     });
   });

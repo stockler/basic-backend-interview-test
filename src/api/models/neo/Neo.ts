@@ -2,6 +2,7 @@ import { mongoose } from "../../helpers/db";
 import { Schema, Model } from "mongoose";
 import { INeo } from './INeo';
 import { INeoModel } from './INeoModel';
+import * as moment from 'moment';
 
 const schema: Schema = new Schema({
   date: {
@@ -45,22 +46,136 @@ const schema: Schema = new Schema({
     return this;
   });
 
-schema.statics.findOrCreateFBAuth = (accessToken, refreshToken, profile) => {
-  return this.findOne({
-    'facebookProvider.id': profile.id
-  }, (err, auth) => {
-    if (!auth) {
-      return this.create({
-        email: profile.emails[0].value,
-        facebookProvider: {
-          id: profile.id,
-          token: accessToken
-        }
-      });
-    } 
-    
-    return auth;
-  });
-};
+schema.statics.findAllNeosHazardous = function () {
+  return this.find({ is_hazardous: true });  
+}
 
-export const Neo: Model<INeo> = mongoose.model<INeo, INeoModel>("Neo", schema);
+schema.statics.findFastestNeo = function (hazardous = false) {
+  return this
+    .findOne({ is_hazardous: hazardous})
+    .sort({ speed: -1 });  
+}
+
+schema.statics.findAllNeosHazardous = function () {
+  return this.find({ is_hazardous: true });  
+}
+
+schema.statics.findBestYearNeos = function(hazardous = false) {
+  const options = [];
+
+  options.push({
+    $match: { 
+      is_hazardous: hazardous,
+      date: { 
+        $exists: true, 
+        $ne: null 
+      }      
+    }
+  });
+
+  options.push({
+    $project: { 
+      year: { 
+        $year: "$date"
+      },
+      is_hazardous: 1
+    }
+  }); 
+
+  options.push({
+    $sortByCount: "$year"
+  });
+
+  options.push({
+    $limit: 1
+  });
+  
+  return this.aggregate(options)
+    .then((results) => {
+      
+      if (results && results.length > 0) {
+        const year = results[0]._id;
+
+        return {
+          year: year,
+          count: results[0].count
+        }
+      }
+    
+      return 0;
+    
+    });
+}
+
+schema.statics.findBestMonthNeos = function(hazardous = false, byMonth = false) {
+  const options = [];
+
+  let criteria;
+
+  options.push({
+    $match: { 
+      is_hazardous: hazardous,
+      date: { 
+        $exists: true, 
+        $ne: null 
+      }      
+    }
+  });
+
+  options.push({
+    $project: { 
+      date: 1,
+      is_hazardous: 1
+    }
+  });  
+  
+  options.push({
+    $group: {
+      _id: {
+        month: { 
+          $month: "$date"
+        }
+      },
+      count: { 
+        $sum: 1 
+      }
+    }
+  });  
+
+  options.push({
+    $sort: { 
+      count: -1 
+    }
+  });
+
+  options.push({
+    $limit: 1
+  });
+
+  return this.aggregate(options)
+    .then((results) => {
+
+      if (results && results.length > 0) {
+        const month = results[0]._id.month;
+        const year = results[0]._id.year;
+
+        let monthStr = month.toString();
+
+        if (month < 10) {
+          monthStr = '0' + monthStr;
+        }
+
+        let date = moment(`2000-${monthStr}-01`)
+        return {
+          month: date.format('MMMM'),
+          count: results[0].count
+        }
+      }
+
+      return 0;
+
+    });
+
+}
+
+export const Neo: INeoModel = mongoose.model<INeo, INeoModel>("Neo", schema);
